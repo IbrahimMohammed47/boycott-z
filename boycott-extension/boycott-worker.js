@@ -69,18 +69,18 @@ async function showBoycottWarning(tabId, boycottType, boycottObject) {
 async function flash(nTimes, period, tabId) {
   return await new Promise((resolve) => {
     let isEven = true;
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if (nTimes == 0) {
-        browserAPI.setIcon({
+        await browserAPI.setIcon({
           tabId,
           path: {
             128: `/icons/red-triangle-128.png`,
           },
         });
-        resolve();
         clearInterval(interval);
+        resolve();
       } else {
-        browserAPI.setIcon({
+        await browserAPI.setIcon({
           tabId,
           path: {
             128: `/icons/${isEven ? "red" : "green"}-triangle-128.png`,
