@@ -1,0 +1,1 @@
+# boycott-extension
