@@ -13,7 +13,7 @@ It does 2 things:
 - Warn you when you open a blacklisted product page on E-commerce websites like Amazon
 - Warn you when you you visit blacklisted websites
 
-![ezgif-2-9918a95766](https://github.com/IbrahimMohammed47/boycott-z/assets/25140638/cb6f3c6e-063d-4523-ab89-cdea6226f519)
+![ezgif-2-9918a95766](https://github.com/IbrahimMohammed47/boycott-z/assets/25140638/7a34a22b-e200-4521-afe5-8bce1d78cd9f)
 
 ## Checklist
 
