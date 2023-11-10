@@ -1,4 +1,21 @@
 let browserAPI = undefined;
+const excludedWebsites = [
+  "google.com",
+  "youtube.com",
+  "facebook.com",
+  "baidu.com",
+  "wikipedia.org",
+  "reddit.com",
+  "yahoo.com",
+  "twitter.com",
+  "x.com",
+  "instagram.com",
+  "linkedin.com",
+  "microsoft.com",
+  "pinterest.com",
+  "apple.com",
+  // Add more websites as needed
+];
 
 export async function handleTabVisit(actions, tabId, tabUrl) {
   browserAPI = actions;
@@ -6,7 +23,9 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
   const domainName = urlObject.hostname.startsWith("www.")
     ? urlObject.hostname.slice(4)
     : urlObject.hostname;
-
+  if (excludedWebsites.indexOf(domainName) >= 0) {
+    return;
+  }
   const eCommerce = getEcommerceTarget(domainName);
   if (eCommerce.isEcommerce) {
     const script = `${eCommerce.target}-blocker`;
