@@ -1,12 +1,6 @@
-// adding a new bookmark row to the popup
-const addNewBookmark = () => {};
+// popup.js
+chrome.action.getBadgeText({}, (result) => {
+  document.getElementById("badgeText").innerText = result;
+});
 
-const viewBookmarks = () => {};
-
-const onPlay = e => {};
-
-const onDelete = e => {};
-
-const setBookmarkAttributes =  () => {};
-
-document.addEventListener("DOMContentLoaded", () => {});
+// You can update the badge text as needed.
