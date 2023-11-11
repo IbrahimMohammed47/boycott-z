@@ -10,10 +10,10 @@ export function executeScript(injection) {
   return chrome.scripting.executeScript(injection);
 }
 
-export function cacheGet(keyList) {
-  return chrome.storage.local.get(keyList);
-}
+// export function cacheGet(keyList) {
+//   return chrome.storage.local.get(keyList);
+// }
 
-export function cacheSet(keyValuesObj) {
-  return chrome.storage.local.set(keyValuesObj);
-}
+// export function cacheSet(keyValuesObj) {
+//   return chrome.storage.local.set(keyValuesObj);
+// }

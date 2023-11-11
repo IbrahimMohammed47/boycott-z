@@ -2,7 +2,7 @@
   "name": "Boycutter",
   "version": "0.1.0",
   "description": "",
-  "permissions": ["tabs", "activeTab", "scripting", "storage"],
+  "permissions": ["tabs", "activeTab", "scripting"],
   "host_permissions": ["<all_urls>"],
 
   "web_accessible_resources": [
