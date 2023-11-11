@@ -1,10 +1,8 @@
 // Note that safari and firefox both support chrome namespace
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  const brands = request.brands;
-
   let brandSentence = null;
   document.querySelectorAll(".-phs").forEach((x) => {
-    if (x.innerText.toLowerCase().startsWith("brand:")) {
+    if (!brandSentence && x.innerText.toLowerCase().startsWith("brand:")) {
       brandSentence = x.innerText;
     }
   });
@@ -14,13 +12,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .trim();
-    foundAtIndex = brands.findIndex((b) => brandSentence.includes(b));
-    if (foundAtIndex > -1) {
-      return sendResponse({ isSafe: false, brand: brands[foundAtIndex] });
-    } else {
-      return sendResponse({ isSafe: true });
-    }
+
+    const startIndex = "brand: ".length;
+    const endIndex = brandSentence.indexOf("|");
+    const brandName = brandSentence.slice(startIndex, endIndex);
+
+    return sendResponse({ brandName });
   } else {
-    return sendResponse({ isSafe: true });
+    return sendResponse({ brandName: null });
   }
 });

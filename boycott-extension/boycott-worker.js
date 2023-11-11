@@ -30,23 +30,20 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
   if (eCommerce.isEcommerce) {
     const script = `${eCommerce.target}-blocker`;
     await injectScript(script, tabId);
-    const json = await getBoycottList("brands");
-    const res = await browserAPI.sendMessageToTab(tabId, {
-      brands: json,
-    });
-    if (res && res.isSafe === false) {
-      const json = await getBoycottItem("brands", res.brand);
-      console.log(json);
-      await showBoycottWarning(tabId, "brand", json);
+    const res = await browserAPI.sendMessageToTab(tabId, {});
+    if (res && res.brandName) {
+      const json = await getBoycottItem("brand", res.brandName);
+      if (json) {
+        await showBoycottWarning(tabId, "brand", json);
+      }
       return;
     }
   } else {
-    const json = await getBoycottItem("websites", domainName);
-    let { country, name, type } = json;
-    if (country) {
+    const json = await getBoycottItem("website", domainName);
+    if (json) {
       await showBoycottWarning(tabId, "website", json);
-      return;
     }
+    return;
   }
   // Reaching this line means everything is ok
   return browserAPI.setIcon({
@@ -58,7 +55,7 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
 }
 
 async function showBoycottWarning(tabId, boycottType, boycottObject) {
-  let { country, name, type } = boycottObject;
+  let { country, label, type } = boycottObject;
   if (boycottType === "brand") {
     await flash(6, 300, tabId);
   } else if (boycottType === "website") {
@@ -101,34 +98,26 @@ async function injectScript(scriptName, tabId) {
   return;
 }
 
-async function getBoycottList(listName) {
-  // chrome.storage.local.set({ myCachedData: jsonData }
-  const cached = await browserAPI.cacheGet([`boycott-list:${listName}`]);
-  if (cached[`boycott-list:${listName}`]) {
-    return cached[`boycott-list:${listName}`];
-  }
+async function getBoycottItem(itemType, key) {
+  const url = `https://lwnimzaynwyplgjazboz.supabase.co/rest/v1/blacklist?type=eq.${itemType}&name=like.*${key
+    .trim()
+    .replaceAll(" ", "%20")}*`;
 
-  const response = await fetch(
-    `https://morning-wind-c16a.ibrahimmohammed.workers.dev/get_list?list=${listName}`
-  );
+  const response = await fetch(url, {
+    headers: {
+      apiKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3bmltemF5bnd5cGxnamF6Ym96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk3MDE0ODQsImV4cCI6MjAxNTI3NzQ4NH0.Cgv3FHAXjMU5aon3dgREuAdkVQ0l9LKRdtR6zrqaIFg",
+    },
+  });
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
   const jsonData = await response.json();
-  const data = jsonData.data ? jsonData.data : jsonData;
-  await browserAPI.cacheSet({ [`boycott-list:${listName}`]: data });
-  return data;
-}
 
-async function getBoycottItem(listName, key) {
-  const response = await fetch(
-    `https://morning-wind-c16a.ibrahimmohammed.workers.dev/get_list?list=${listName}&key=${key}`
-  );
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
+  if (Array.isArray(jsonData) && jsonData.length > 0) {
+    return jsonData[0];
   }
-  const jsonData = await response.json();
-  return jsonData.data ? jsonData.data : jsonData;
+  return null;
 }
 
 function getEcommerceTarget(url) {
