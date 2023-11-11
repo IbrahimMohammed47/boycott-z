@@ -1,4 +1,4 @@
-import { handleTabVisit } from "../../background.js/index.js";
+import { handleTabVisit } from "../../background.js";
 import * as actions from "./worker-actions.js";
 
 // Listen when user switches to a tab (activates it)

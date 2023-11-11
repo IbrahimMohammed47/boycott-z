@@ -1,5 +1,5 @@
 {
-  "name": "Boycutter",
+  "name": "Boycott-Z",
   "version": "0.1.0",
   "description": "",
   "permissions": ["tabs", "activeTab", "scripting"],
@@ -17,11 +17,11 @@
       "48": "icons/green-triangle-128.png",
       "128": "icons/green-triangle-128.png"
     },
-    "default_title": "Boycutter",
+    "default_title": "Boycott-Z",
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "browsers/chrome/worker-listeners.js",
+    "service_worker": "browsers-adapters/chrome/worker-listeners.js",
     "type": "module"
   },
   "manifest_version": 3
