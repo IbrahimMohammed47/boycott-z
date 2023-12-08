@@ -22,9 +22,9 @@ It does 2 things:
 - [x] Added extension code that triggers when a person visits blacklisted product, and then warns user
 - [x] Supporting blacklisted brand detection in Amazon, Ebay, and Jumia
 - [x] Migrate to Supabase to leverage SQL and improve performance
+- [x] Enriching the database or integrating it with other sources
+- [x] Enhancing the UI that currently warns the user, (adding a popup with ~~cool~~ CSS)
 - [ ] Deploying and Publishing on Chrome webstore
-- [ ] Enriching the database or integrating it with other sources
-- [ ] Enhancing the UI that currently warns the user, (adding a popup with cool CSS)
 - [ ] Supporting blacklisted brand detection in other famous e-commerce websites
 - [ ] Support other browsers
 
