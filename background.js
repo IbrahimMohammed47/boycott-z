@@ -55,7 +55,7 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
 }
 
 async function showBoycottWarning(tabId, boycottType, boycottObject) {
-  let { country, label, type } = boycottObject;
+  await browserAPI.cacheSet({boycottZItem: boycottObject})
   if (boycottType === "brand") {
     await flash(6, 300, tabId);
   } else if (boycottType === "website") {

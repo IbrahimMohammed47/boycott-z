@@ -10,10 +10,14 @@ export function executeScript(injection) {
   return chrome.scripting.executeScript(injection);
 }
 
+// export function sendMessageToPopup(msg){
+//   return chrome.runtime.sendMessage({msg});
+// }
+
 // export function cacheGet(keyList) {
 //   return chrome.storage.local.get(keyList);
 // }
 
-// export function cacheSet(keyValuesObj) {
-//   return chrome.storage.local.set(keyValuesObj);
-// }
+export function cacheSet(keyValuesObj) {
+  return chrome.storage.local.set(keyValuesObj);
+}
