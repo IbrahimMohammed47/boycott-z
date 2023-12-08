@@ -1,6 +1,6 @@
 # boycott-z
 
-An extension that helps Human beings boycott products and services of terrorists.
+An extension that helps Human beings boycott products and services affiliated with terrorists.
 
 ## What is this?
 
