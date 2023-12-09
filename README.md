@@ -24,6 +24,7 @@ It does 2 things:
 - [x] Migrate to Supabase to leverage SQL and improve performance
 - [x] Enriching the database or integrating it with other sources
 - [x] Enhancing the UI that currently warns the user, (adding a popup with ~~cool~~ CSS)
+- [x] Including fields `reason` And `proof`
 - [ ] Deploying and Publishing on Chrome webstore
 - [ ] Supporting blacklisted brand detection in other famous e-commerce websites
 - [ ] Support other browsers
