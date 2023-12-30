@@ -29,11 +29,7 @@ It does 2 things:
 - [ ] Supporting blacklisted brand detection in other famous e-commerce websites
 - [ ] Support other browsers
 
-## Installation guide (until published on chrome store)
+## Installation guide
 
-1. Clone the repo or install as zip file
-2. Go to chrome://extensions
-3. Switch on "Developer Mode"
-4. Click on "Load Unpacked"
-5. Select the folder called browser-extension inside the root folder of this repo
-6. Finally, pin the extension so you can see it working
+1. Install it from https://chromewebstore.google.com/detail/boycott-z/fiolfcekimelemlneoogmpjgdjhkdhdd?pli=1
+2. Pin it to toolbar
