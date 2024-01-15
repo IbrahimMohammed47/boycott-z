@@ -35,3 +35,8 @@ It does 2 things:
 
 1. Install it from https://chromewebstore.google.com/detail/boycott-z/fiolfcekimelemlneoogmpjgdjhkdhdd?pli=1
 2. Pin it to toolbar
+
+## Building and testing
+
+Run the script `build.sh` which will create extension directories for supported
+browsers in the `dist` directory.
