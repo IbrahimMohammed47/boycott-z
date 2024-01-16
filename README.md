@@ -27,6 +27,7 @@ It does 2 things:
 - [x] Enhancing the UI that currently warns the user, (adding a popup with ~~cool~~ CSS)
 - [x] Including fields `reason` And `proof`
 - [x] Deploying and Publishing on Chrome webstore
+- [x] Deploying and Publishing on Firefox
 - [ ] Branding and better designs
 - [ ] Supporting other famous e-commerce websites
 - [ ] Supporting other browsers
