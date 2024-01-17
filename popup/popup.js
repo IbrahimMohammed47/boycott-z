@@ -3,7 +3,7 @@
 chrome.storage.local.get(["boycottZItem"]).then((result) => {
   const boycottZItem = result.boycottZItem
   if (!boycottZItem) {
-    window.close()
+    return window.close()
   }
   const { country, label, type, proof, reason } = boycottZItem
   let msg = ``
