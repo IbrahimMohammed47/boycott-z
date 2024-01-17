@@ -22,15 +22,14 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
   const urlObject = new URL(tabUrl);
 
   // ignore urls for local files, firefox about:config and so on..
-  if(!urlObject.hostname) {
-      return;
+  if (!urlObject.hostname || urlObject.hostname === 'newtab') {
+    return showOk(tabId);
   }
-
   const domainName = urlObject.hostname.startsWith("www.")
     ? urlObject.hostname.slice(4)
     : urlObject.hostname;
   if (excludedWebsites.indexOf(domainName) >= 0) {
-    return;
+    return showOk(tabId);
   }
   const eCommerce = getEcommerceTarget(domainName);
   if (eCommerce.isEcommerce) {
@@ -41,22 +40,22 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
       const json = await getBoycottItem("brand", res.brandName);
       if (json) {
         await showBoycottWarning(tabId, "brand", json);
+        return;
       }
-      return;
     }
   } else {
     const json = await getBoycottItem("website", domainName);
     if (json) {
       await showBoycottWarning(tabId, "website", json);
+      return
     }
-    return;
   }
-  
-  return  showOk(tabId);
+
+  return showOk(tabId);
 }
 
 async function showOk(tabId) {
-  await browserAPI.cacheSet({boycottZItem: null})
+  await browserAPI.cacheSet({ boycottZItem: null })
   browserAPI.setIcon({
     tabId,
     path: {
@@ -66,7 +65,7 @@ async function showOk(tabId) {
 }
 
 async function showBoycottWarning(tabId, boycottType, boycottObject) {
-  await browserAPI.cacheSet({boycottZItem: boycottObject})
+  await browserAPI.cacheSet({ boycottZItem: boycottObject })
   if (boycottType === "brand") {
     await flash(6, 300, tabId);
   } else if (boycottType === "website") {

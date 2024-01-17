@@ -1,14 +1,17 @@
 // popup.js
 
 chrome.storage.local.get(["boycottZItem"]).then((result) => {
-  const { country, label, type, proof, reason } = result.boycottZItem
+  const boycottZItem = result.boycottZItem
+  if (!boycottZItem) {
+    window.close()
+  }
+  const { country, label, type, proof, reason } = boycottZItem
   let msg = ``
   // let proofText = proof?`<a class="button is-link" href=${proof}>Why Boycott?</a>`: ''
   let category = type === 'brand' ? 'brand' : 'company'
   const countryText = ["France", "Israel"].includes(country) ? ` from <b>${country}</b>` : ''
   msg =
     `<b>${label}</b>, a ${category}${countryText}.`
-
   if (reason && typeof reason == 'string' && reason.length > 0) {
     msg += `
     <br/><br/><p>
@@ -25,9 +28,9 @@ chrome.storage.local.get(["boycottZItem"]).then((result) => {
   else if (country === 'France' && !reason) {
     msg += `
     <br/><br/><p>
-    The French government has gained notoriety for its discriminatory practices against Muslims both within and outside of France. 
-    This is evident through the implementation of policies that target Islam within the country, as well as through military actions, 
-    such as airstrikes, carried out against Muslim nations in Africa. This is besides its continuous support to Zionism.</p>`
+    The French government has gained notoriety for its discriminatory practices against Muslims both inside and outside of France. 
+    This is evident through the implementation of policies that target Muslims within the country, as well as through military actions, 
+    such as airstrikes carried out against Muslim nations in Africa. This is besides its continuous support to Zionism.</p>`
   }
 
   if (proof && typeof proof == 'string' && proof.length > 0) {

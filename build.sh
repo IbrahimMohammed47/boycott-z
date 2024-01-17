@@ -14,7 +14,7 @@ function prepare_extension() {
     --exclude '*.json'
 
   cp manifest.$BROWSER.json dist/$BROWSER/manifest.json
-  web-ext build -s dist/$BROWSER -a dist/package/$BROWSER/
+  web-ext build -s dist/$BROWSER -a dist/package/$BROWSER/ --overwrite-dest
 }
 
 prepare_extension firefox
