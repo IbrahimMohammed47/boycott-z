@@ -1,7 +1,4 @@
 body {
-  /* margin-top: 25px;
-  margin-bottom: 25px; */
-  min-width: 500px;
 }
 
 /* <i class="fa-solid fa-arrow-up-right-from-square"></i> */
@@ -13,8 +10,8 @@ body {
   /* width: 500px; */
   /* height: 280px; */
   /* height: 350px; */
-  height: auto;
-  min-height: 280px;
+  width: 500px;
+  height: 296px;
   background-repeat: no-repeat;
   background-size: auto 100%;
   /* background-size: cover; */
