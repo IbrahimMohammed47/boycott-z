@@ -51,8 +51,13 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
     }
     return;
   }
-  // Reaching this line means everything is ok
-  return browserAPI.setIcon({
+  
+  return  showOk(tabId);
+}
+
+async function showOk(tabId) {
+  await browserAPI.cacheSet({boycottZItem: null})
+  browserAPI.setIcon({
     tabId,
     path: {
       128: `/icons/green-triangle-128.png`,
