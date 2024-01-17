@@ -20,6 +20,12 @@ const excludedWebsites = [
 export async function handleTabVisit(actions, tabId, tabUrl) {
   browserAPI = actions;
   const urlObject = new URL(tabUrl);
+
+  // ignore urls for local files, firefox about:config and so on..
+  if(!urlObject.hostname) {
+      return;
+  }
+
   const domainName = urlObject.hostname.startsWith("www.")
     ? urlObject.hostname.slice(4)
     : urlObject.hostname;
