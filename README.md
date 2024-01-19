@@ -27,14 +27,15 @@ It does 2 things:
 - [x] Enhancing the UI that currently warns the user, (adding a popup with ~~cool~~ CSS)
 - [x] Including fields `reason` And `proof`
 - [x] Deploying and Publishing on Chrome webstore
-- [ ] Deploying and Publishing on Firefox
+- [x] Deploying and Publishing on Firefox
 - [ ] Branding and better designs
 - [ ] Supporting other famous e-commerce websites
-- [ ] Supporting other browsers
 
 ## Installation guide
 
-1. Install it from https://chromewebstore.google.com/detail/boycott-z/fiolfcekimelemlneoogmpjgdjhkdhdd?pli=1
+1. Installation:
+  - For Chrome: https://chromewebstore.google.com/detail/boycott-z/fiolfcekimelemlneoogmpjgdjhkdhdd?pli=1
+  - For Firefox: https://addons.mozilla.org/en-US/firefox/addon/boycott-z/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search
 2. Pin it to toolbar
 
 ## Building and testing
