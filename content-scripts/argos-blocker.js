@@ -1,0 +1,54 @@
+// Note that safari and firefox both support chrome namespace
+const brandRegex = /"brand":"([\w\s'&-]+)"/is;
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    pollExpression()
+        .then(scriptElements => {
+            let json;
+            let rawBrandName;
+            scriptElements.forEach((e) => {
+              if(e.innerText.startsWith("window.__data=")) {
+                let match = brandRegex.exec(e.innerText);
+                if (match) {
+                  rawBrandName = match.at(1);
+                }
+              }
+            });
+
+            if (rawBrandName) {
+                let brandName = rawBrandName
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .trim();
+                sendResponse({ brandName });
+            } else {
+                sendResponse({ brandName: null });
+            }
+        })
+        .catch(e => {
+            console.log("ERR:" + e)
+            sendResponse({ brandName: null });
+        })
+    return true // DON'T EVER REMOVE THIS LINE
+});
+
+
+
+// this makes the script wait until page is loaded and script tags are found
+function pollExpression() {
+  return new Promise((resolve, reject) => {
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const elements = document.querySelectorAll('body > script');
+      if (elements.length > 0) {
+        clearInterval(interval);
+        resolve(Array.from(elements));
+      }
+
+      if (Date.now() - startTime >= 10000) {
+        clearInterval(interval);
+        reject(new Error('Timeout: Expression not found within 10 seconds.'));
+      }
+    }, 50);
+  });
+}

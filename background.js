@@ -23,7 +23,7 @@ const excludedWebsites = [
 ];
 
 const ecommerceTargets = [
-  "jumia", "amazon", "ebay", "walmart"
+  "jumia", "amazon", "ebay", "walmart", "argos"
 ]
 
 export async function handleTabVisit(actions, tabId, tabUrl) {
