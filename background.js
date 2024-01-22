@@ -1,4 +1,9 @@
 let browserAPI = undefined;
+/**
+ * excludedWebsites is a list of famous websites that people usually visit 
+ * and we don't want to run our extension on. 
+ * this is to save unnecessary code run and db queries 
+ */
 const excludedWebsites = [
   "google.com",
   "youtube.com",
@@ -16,6 +21,10 @@ const excludedWebsites = [
   "apple.com",
   // Add more websites as needed
 ];
+
+const ecommerceTargets = [
+  "jumia", "amazon", "ebay", "walmart"
+]
 
 export async function handleTabVisit(actions, tabId, tabUrl) {
   browserAPI = actions;
@@ -131,10 +140,7 @@ async function getBoycottItem(itemType, key) {
 }
 
 function getEcommerceTarget(url) {
-  const ecommerceSites = ["jumia", "amazon", "ebay"];
-
-  const matchingSite = ecommerceSites.find((site) => url.includes(site));
-
+  const matchingSite = ecommerceTargets.find((site) => url.includes(site));
   if (matchingSite) {
     return { isEcommerce: true, target: matchingSite };
   } else {
