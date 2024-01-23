@@ -2,13 +2,21 @@
   "name": "Boycott-Z",
   "version": "0.2.1",
   "description": "",
-  "permissions": ["tabs", "activeTab", "scripting", "storage"],
-  "host_permissions": ["<all_urls>"],
-
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "web_accessible_resources": [
     {
       "resources": [],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "action": {
@@ -21,12 +29,14 @@
     "default_popup": "popup/popup.html"
   },
   "background": {
-    "scripts": ["browsers-adapters/chrome/worker-listeners.js"],
+    "scripts": [
+      "browsers-adapters/chrome/worker-listeners.js"
+    ],
     "type": "module"
   },
   "browser_specific_settings": {
     "gecko": {
-        "id": "{17a15a43-7d2b-4796-b9a9-1901da7f6335}"
+      "id": "{17a15a43-7d2b-4796-b9a9-1901da7f6335}"
     }
   },
   "manifest_version": 3
