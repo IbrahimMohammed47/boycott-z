@@ -24,7 +24,7 @@ jobs:
   
         - name: Extract manifest version
           run: |
-            MANIFEST_VERSION=$(jq -r '.version' manifest.json)
+            MANIFEST_VERSION=$(jq -r '.version' manifest.chrome.json)
             echo "MANIFEST_VERSION=$MANIFEST_VERSION" >> $GITHUB_ENV
   
         - name: Upload step
