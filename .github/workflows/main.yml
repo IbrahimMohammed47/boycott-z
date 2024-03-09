@@ -13,7 +13,7 @@ jobs:
       steps:
         - uses: actions/setup-node@v2-beta
           with:
-            node-version: "16.10"
+            node-version: "20.11"
     
         - name: Install webstore cli
           run: |-
