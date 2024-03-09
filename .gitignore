@@ -1,4 +1,5 @@
 scripts
-dist
+dist/chrome
+dist/firefox
 .idea
 tmp.txt
