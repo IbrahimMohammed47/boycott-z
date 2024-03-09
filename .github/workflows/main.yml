@@ -9,6 +9,9 @@ jobs:
   build-and-publish:
       name: Upload extension
       runs-on: ubuntu-latest
+      # env:
+      #   EXTENSION_ID:  ${{ env.EXTENSION_ID }}
+ 
   
       steps: 
         - uses: actions/setup-node@v4
@@ -31,7 +34,7 @@ jobs:
           run: |-
             chrome-webstore-upload upload -v \
               --source dist/package/chrome/boycott-z-${{ env.MANIFEST_VERSION }}.zip \
-              --extension-id ${{ env.EXTENSION_ID }} \
+              --extension-id ${{ vars.EXTENSION_ID }} \
               --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \
               --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \
               --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
