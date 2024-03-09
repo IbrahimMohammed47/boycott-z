@@ -31,7 +31,7 @@ jobs:
           run: |-
             chrome-webstore-upload upload \
               --source dist/package/chrome/boycott-z-${{ env.MANIFEST_VERSION }}.zip \
-              --extension-id ${{ secrets.EXTENSION_ID }} \
+              --extension-id ${{ env.EXTENSION_ID }} \
               --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \
               --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \
               --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
