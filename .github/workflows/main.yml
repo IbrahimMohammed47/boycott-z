@@ -1,0 +1,34 @@
+name: Chrome Extension CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+      name: Upload extension
+      runs-on: ubuntu-latest
+  
+      steps:
+        - uses: actions/setup-node@v2-beta
+          with:
+            node-version: "16.10"
+    
+        - name: Install webstore cli
+          run: |-
+            npm install -g chrome-webstore-upload-cli
+  
+        - name: Extract manifest version
+          run: |
+            MANIFEST_VERSION=$(jq -r '.version' manifest.json)
+            echo "MANIFEST_VERSION=$MANIFEST_VERSION" >> $GITHUB_ENV
+  
+        - name: Upload step
+          run: |-
+            chrome-webstore-upload upload \
+              --source dist/package/chrome/boycott-z-${{ env.MANIFEST_VERSION }}.zip \
+              --extension-id ${{ secrets.EXTENSION_ID }} \
+              --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \
+              --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \
+              --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
