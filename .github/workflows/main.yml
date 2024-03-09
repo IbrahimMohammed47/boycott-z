@@ -10,11 +10,14 @@ jobs:
       name: Upload extension
       runs-on: ubuntu-latest
   
-      steps:
-        - uses: actions/setup-node@v2-beta
+      steps: 
+        - uses: actions/setup-node@v4
           with:
-            node-version: "20.11"
-    
+            node-version: 20
+
+        - name: Checkout repository         
+          uses: actions/checkout@v4
+         
         - name: Install webstore cli
           run: |-
             npm install -g chrome-webstore-upload-cli
