@@ -27,11 +27,15 @@ const ecommerceTargets = [
 ]
 
 const socialTargets = [
-  "twitter"
+  "twitter",
+  "linkedin"
 ]
 
 function shouldByPassPage(domainName, path) {
   if (['twitter.com', 'x.com'].includes(domainName) && path.length > 1 && path.split("/").length == 2) {
+    return false
+  }
+  if (['linkedin.com'].includes(domainName) && path.length > 1 && path.split("/").length == 4) {
     return false
   }
   return excludedWebsites.indexOf(domainName) >= 0
@@ -174,7 +178,6 @@ async function getBoycottItem(itemType, key) {
     },
   });
   if (!response.ok) {
-    console.log(response)
     let b = await response.json()
     console.log(b)
     throw new Error("Network response was not ok");
@@ -182,7 +185,6 @@ async function getBoycottItem(itemType, key) {
   const jsonData = await response.json();
 
   if (Array.isArray(jsonData) && jsonData.length > 0) {
-    console.log(jsonData)
     return jsonData[0];
   }
   return null;

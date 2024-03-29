@@ -24,6 +24,12 @@ chrome.storage.local.get(["boycottZItem"]).then((result) => {
     claiming countless innocent lives. This reprehensible act was allegedly in response to Hamas' attacks on Israeli forces and settlements on October 7th, 2023.</p>`
 
   }
+
+  if (type === 'figure') {
+    msg += `
+    <p>
+    Note: Sometimes there are namesakes, it's important to verify that we actually mean the person you're looking at.</p>`
+  }
   // else if (country === 'France' && !reason) {
   //   msg += `
   //   <br/><br/><p>
