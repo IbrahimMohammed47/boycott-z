@@ -28,7 +28,6 @@ function pollExpression() {
         const startTime = Date.now();
         const interval = setInterval(() => {
             const element = document.querySelector("div[data-testid=UserName]")
-            console.log(element)
             if (element) {
                 clearInterval(interval);
                 resolve(element);

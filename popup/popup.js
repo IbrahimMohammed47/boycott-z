@@ -8,10 +8,9 @@ chrome.storage.local.get(["boycottZItem"]).then((result) => {
   const { country, label, type, proof, reason } = boycottZItem
   let msg = ``
   // let proofText = proof?`<a class="button is-link" href=${proof}>Why Boycott?</a>`: ''
-  let category = type === 'brand' ? 'brand' : 'company'
   const countryText = ["France", "Israel"].includes(country) ? ` from <b>${country}</b>` : ''
   msg =
-    `<b>${label}</b>, a ${category}${countryText}.`
+    `<b>${label}</b>, a ${type}${countryText}.`
   if (reason && typeof reason == 'string' && reason.length > 0) {
     msg += `
     <br/><br/><p>
