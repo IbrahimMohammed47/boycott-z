@@ -26,6 +26,16 @@ const ecommerceTargets = [
   "jumia", "amazon", "ebay", "walmart", "argos", "tesco", "aliexpress", "noon", "bestbuy", "target", "sainsburys"
 ]
 
+const socialTargets = [
+  "twitter"
+]
+
+function shouldByPassPage(domainName, path) {
+  if (['twitter.com', 'x.com'].includes(domainName) && path.length > 0 && path.split("/").length == 2) {
+    return false
+  }
+  return excludedWebsites.indexOf(domainName) >= 0
+}
 export async function handleTabVisit(actions, tabId, tabUrl) {
   browserAPI = actions;
   const urlObject = new URL(tabUrl);
@@ -37,12 +47,13 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
   const domainName = urlObject.hostname.startsWith("www.")
     ? urlObject.hostname.slice(4)
     : urlObject.hostname;
-  if (excludedWebsites.indexOf(domainName) >= 0) {
+  if (shouldByPassPage(domainName, urlObject.pathname)) {
     return showOk(tabId);
   }
-  const eCommerce = getEcommerceTarget(domainName);
-  if (eCommerce.isEcommerce) {
-    const script = `${eCommerce.target}-blocker`;
+  const targetObj = getTarget(domainName)
+  // const eCommerce = getEcommerceTarget(domainName);
+  if (targetObj.type === 'ecommerce') {
+    const script = `${targetObj.target}-blocker`;
     await injectScript(script, tabId);
     const res = await browserAPI.sendMessageToTab(tabId, {});
     if (res && res.brandName) {
@@ -52,6 +63,19 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
         return;
       }
     }
+  }
+  else if (targetObj.type === 'social') {
+    const script = `${targetObj.target}-blocker`;
+    await injectScript(script, tabId);
+    const res = await browserAPI.sendMessageToTab(tabId, {});
+    console.log("SOCIAL: ", res)
+    // if (res && res.brandName) {
+    //   const json = await getBoycottItem("brand", res.brandName);
+    //   if (json) {
+    //     await showBoycottWarning(tabId, "brand", json);
+    //     return;
+    //   }
+    // }
   } else {
     const json = await getBoycottItem("website", domainName);
     if (json) {
@@ -118,9 +142,15 @@ async function injectScript(scriptName, tabId) {
 }
 
 async function getBoycottItem(itemType, key) {
-  const url = `https://lwnimzaynwyplgjazboz.supabase.co/rest/v1/blacklist?type=eq.${itemType}&name=like.*${key
-    .trim()
-    .replaceAll(" ", "%20")}*`;
+  let matcher = ""
+  if (itemType === 'website') {
+    matcher = `name=like.*${key}`  // to include subdomains
+  } else if (itemType === 'barnd') {
+    matcher = `name=like.*${key
+      .trim()
+      .replaceAll(" ", "%20")}*`
+  }
+  const url = `https://lwnimzaynwyplgjazboz.supabase.co/rest/v1/blacklist?type=eq.${itemType}&${matcher}`;
 
   const response = await fetch(url, {
     headers: {
@@ -146,4 +176,14 @@ function getEcommerceTarget(url) {
   } else {
     return { isEcommerce: false, target: null };
   }
+}
+
+function getTarget(url) {
+  let matchingSite = ecommerceTargets.find((site) => url.includes(site));
+  if (matchingSite) return { type: "ecommerce", target: matchingSite }
+
+  matchingSite = socialTargets.find((site) => url.includes(site));
+  if (matchingSite) return { type: "social", target: matchingSite }
+
+  return { type: null, target: null }
 }

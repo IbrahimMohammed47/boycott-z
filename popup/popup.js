@@ -25,13 +25,13 @@ chrome.storage.local.get(["boycottZItem"]).then((result) => {
     claiming countless innocent lives. This reprehensible act was allegedly in response to Hamas' attacks on Israeli forces and settlements on October 7th, 2023.</p>`
 
   }
-  else if (country === 'France' && !reason) {
-    msg += `
-    <br/><br/><p>
-    The French government has gained notoriety for its discriminatory practices against Muslims both inside and outside of France. 
-    This is evident through the implementation of policies that target Muslims within the country, as well as through military actions, 
-    such as airstrikes carried out against Muslim nations in Africa. This is besides its continuous support to Zionism.</p>`
-  }
+  // else if (country === 'France' && !reason) {
+  //   msg += `
+  //   <br/><br/><p>
+  //   The French government has gained notoriety for its discriminatory practices against Muslims both inside and outside of France. 
+  //   This is evident through the implementation of policies that target Muslims within the country, as well as through military actions, 
+  //   such as airstrikes carried out against Muslim nations in Africa. This is besides its continuous support to Zionism.</p>`
+  // }
 
   if (proof && typeof proof == 'string' && proof.length > 0) {
     msg += `
