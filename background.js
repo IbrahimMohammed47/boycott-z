@@ -75,11 +75,16 @@ async function showOk(tabId) {
 
 async function showBoycottWarning(tabId, boycottType, boycottObject) {
   await browserAPI.cacheSet({ boycottZItem: boycottObject })
+  var notification = {
+    title: "Boycott Warning",
+  };
   if (boycottType === "brand") {
-    await flash(6, 300, tabId);
+    notification.message = `You visited a product from a boycotted brand: ${boycottObject.label}. Click on the boycott-Z icon to learn more.`;
   } else if (boycottType === "website") {
-    await flash(6, 300, tabId);
+    notification.message = `You visited a boycott brand's website: ${boycottObject.name}. Click on the boycott-Z icon to learn more.`;
   }
+  browserAPI.notify(notification);
+  await flash(6, 300, tabId);
 }
 
 async function flash(nTimes, period, tabId) {

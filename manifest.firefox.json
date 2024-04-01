@@ -1,11 +1,12 @@
 {
   "name": "Boycott-Z",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Adds a browser add-on icon that turns red when viewed site or product is on the boycott list.",
   "permissions": [
     "<all_urls>",
     "tabs",
     "activeTab",
+    "notifications",
     "scripting",
     "storage"
   ],
