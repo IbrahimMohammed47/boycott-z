@@ -33,7 +33,7 @@ jobs:
             MANIFEST_VERSION=$(jq -r '.version' manifest.chrome.json)
             echo "MANIFEST_VERSION=$MANIFEST_VERSION" >> $GITHUB_ENV
   
-        - name: Upload step
+        - name: Upload chrome extension
           run: |-
             chrome-webstore-upload upload -v \
               --source dist/package/chrome/boycott-z-${{ env.MANIFEST_VERSION }}.zip \
@@ -41,3 +41,13 @@ jobs:
               --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \
               --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \
               --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
+
+        - name: Upload Firefox extension
+          uses: wdzeng/firefox-addon@v1
+          with:
+            addon-guid: 17a15a43-7d2b-4796-b9a9-1901da7f6335
+            xpi-path: dist/package/firefox/boycott-z-${{ env.MANIFEST_VERSION }}.zip
+            self-hosted: false
+            license: MIT
+            jwt-issuer: ${{ secrets.CI_FIREFOX_JWT_ISSUER }}
+            jwt-secret: ${{ secrets.CI_FIREFOX_JWT_SECRET }}
