@@ -20,6 +20,9 @@ jobs:
 
         - name: Checkout repository         
           uses: actions/checkout@v4
+
+        - name: Build extension packages
+          run: bash ./build.sh
          
         - name: Install webstore cli
           run: |-
