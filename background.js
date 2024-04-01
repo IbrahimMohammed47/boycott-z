@@ -5,26 +5,50 @@ let browserAPI = undefined;
  * this is to save unnecessary code run and db queries 
  */
 const excludedWebsites = [
-  "google.com",
-  "youtube.com",
-  "facebook.com",
-  "baidu.com",
-  "wikipedia.org",
-  "reddit.com",
-  "yahoo.com",
-  "twitter.com",
-  "x.com",
-  "instagram.com",
-  "linkedin.com",
-  "microsoft.com",
-  "pinterest.com",
-  "apple.com",
+  "google",
+  "youtube",
+  "facebook",
+  "baidu",
+  "wikipedia",
+  "reddit",
+  "yahoo",
+  "twitter",
+  "x",
+  "instagram",
+  "linkedin",
+  "microsoft",
+  "pinterest",
+  "apple",
   // Add more websites as needed
 ];
 
 const ecommerceTargets = [
   "jumia", "amazon", "ebay", "walmart", "argos", "tesco", "aliexpress", "noon", "bestbuy", "target", "sainsburys"
 ]
+const prefixes = ["www.", "www2.", "app."];
+// none exhaustive list of TLDs
+const tlds = [".com", ".org", ".net", ".de", ".co.uk", ".io", ".gov", ".edu", ".ai", ".us", ".uk", ".eu", ".ca", ".nl", ".au", ".in"];
+function getSiteNameFromUrl(urlObject) {
+  let domainName = urlObject.hostname;
+
+  // Remove common prefixes
+  for (let prefix of prefixes) {
+    if (domainName.startsWith(prefix)) {
+      domainName = domainName.slice(prefix.length);
+      break;
+    }
+  }
+
+  // Remove TLDs
+  for (let tld of tlds) {
+    if (domainName.endsWith(tld)) {
+      domainName = domainName.slice(0, -tld.length);
+      break;
+    }
+  }
+
+  return domainName;
+}
 
 export async function handleTabVisit(actions, tabId, tabUrl) {
   browserAPI = actions;
@@ -34,9 +58,8 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
   if (!urlObject.hostname || urlObject.hostname === 'newtab') {
     return showOk(tabId);
   }
-  const domainName = urlObject.hostname.startsWith("www.")
-    ? urlObject.hostname.slice(4)
-    : urlObject.hostname;
+  const domainName = getSiteNameFromUrl(urlObject);
+  
   if (excludedWebsites.indexOf(domainName) >= 0) {
     return showOk(tabId);
   }
