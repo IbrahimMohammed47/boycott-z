@@ -1,25 +1,21 @@
 {
   "name": "Boycott-Z",
   "version": "0.2.1",
-  "description": "",
+  "description": "Adds a browser add-on icon that turns red when viewed site or product is on the boycott list.",
   "permissions": [
+    "<all_urls>",
     "tabs",
     "activeTab",
     "scripting",
     "storage"
   ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "icons": {
+      "48": "icons/green-triangle-128.png"
+  },
   "web_accessible_resources": [
-    {
-      "resources": [],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
+      "popup/*.*"
   ],
-  "action": {
+  "browser_action": {
     "default_icon": {
       "16": "icons/green-triangle-128.png",
       "48": "icons/green-triangle-128.png",
@@ -30,7 +26,7 @@
   },
   "background": {
     "scripts": [
-      "browsers-adapters/chrome/worker-listeners.js"
+      "browsers-adapters/firefox/worker-listeners.js"
     ],
     "type": "module"
   },
@@ -39,5 +35,5 @@
       "id": "{17a15a43-7d2b-4796-b9a9-1901da7f6335}"
     }
   },
-  "manifest_version": 3
+  "manifest_version": 2
 }
