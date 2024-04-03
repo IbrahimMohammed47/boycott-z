@@ -1,6 +1,10 @@
 // popup.js
 
-chrome.storage.local.get(["boycottZItem"]).then((result) => {
+if (!('browser' in self)) {
+  self.browser = self.chrome;
+}
+
+browser.storage.local.get(["boycottZItem"]).then((result) => {
   const boycottZItem = result.boycottZItem
   if (!boycottZItem) {
     return window.close()
@@ -49,11 +53,9 @@ chrome.storage.local.get(["boycottZItem"]).then((result) => {
   if (proof) {
     document.getElementById("boycottZProof").addEventListener('click', (event) => {
       let ur = event.target.getAttribute('href')
-      chrome.tabs.create({ url: ur });
+      browser.tabs.create({ url: ur });
+      return false;
     })
-    // $('body').on('click', 'a', function(){
-    //   return false;
-    // });
   }
 
 });
