@@ -109,6 +109,17 @@ async function showOk(tabId) {
 
 async function showBoycottWarning(tabId, boycottObject) {
   await browserAPI.cacheSet({ boycottZItem: boycottObject })
+  var notification = {
+    title: "Boycott Warning",
+  };
+  if (boycottObject.type === "brand") {
+    notification.message = `You visited a product from a boycotted brand: ${boycottObject.label}. Click on the boycott-Z extension to learn more.`;
+  } else if (boycottObject.type === "website") {
+    notification.message = `You visited a boycott brand's website: ${boycottObject.name}. Click on the boycott-Z extension to learn more.`;
+  } else if (boycottObject.type === "figure") {
+    notification.message = `You visited an anti-palestinian profile: ${boycottObject.name}. Click on the boycott-Z extension to learn more.`;
+  }
+  browserAPI.notify(notification);
   await flash(6, 300, tabId);
 }
 
@@ -148,6 +159,7 @@ async function injectScript(scriptName, tabId) {
 }
 
 async function getBoycottItem(itemType, key) {
+
   let matcher = ""
   if (itemType === 'website') {
     matcher = `name=like.*${key}`  // to include subdomains
@@ -158,19 +170,18 @@ async function getBoycottItem(itemType, key) {
   } else if (itemType === 'figure') {
     key = key.trim()
     let nameParts = key.split(" ").filter(x => !!x)
-    if (nameParts.length > 3) return null
     let keyX = key
       .replaceAll(" ", "%20")
     matcher = `name=like.*${keyX}*`
-    if (nameParts.length === 3) {
+
+    if (nameParts.length >= 3) {
       matcher = `name.like.*${keyX}*`
       let matcher2 = `name.like.*${nameParts.slice(0, 2).join(" ").replaceAll(" ", "%20")}*`
       let matcher3 = `name.like.*${nameParts.slice(1, 3).join(" ").replaceAll(" ", "%20")}*`
       matcher = `or=(${matcher},${matcher2},${matcher3})`
     }
   }
-  const url = `https://lwnimzaynwyplgjazboz.supabase.co/rest/v1/blacklist?limit=1&type=eq.${itemType}&${matcher}`;
-
+  const url = `https://lwnimzaynwyplgjazboz.supabase.co/rest/v1/blacklist?limit=5&type=eq.${itemType}&${matcher}`;
   const response = await fetch(url, {
     headers: {
       apiKey:
@@ -183,11 +194,11 @@ async function getBoycottItem(itemType, key) {
     throw new Error("Network response was not ok");
   }
   const jsonData = await response.json();
-
   if (Array.isArray(jsonData) && jsonData.length > 0) {
     return jsonData[0];
   }
   return null;
+
 }
 
 function getEcommerceTarget(url) {

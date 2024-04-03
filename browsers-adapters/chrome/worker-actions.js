@@ -10,13 +10,14 @@ export function executeScript(injection) {
   return chrome.scripting.executeScript(injection);
 }
 
-// export function sendMessageToPopup(msg){
-//   return chrome.runtime.sendMessage({msg});
-// }
-
-// export function cacheGet(keyList) {
-//   return chrome.storage.local.get(keyList);
-// }
+export function notify(notification) {
+  return chrome.notifications.create({
+    type: "basic",
+    iconUrl: chrome.runtime.getURL("icons/red-triangle-128.png"),
+    title: notification.title,
+    message: notification.message
+  });
+}
 
 export function cacheSet(keyValuesObj) {
   return chrome.storage.local.set(keyValuesObj);
