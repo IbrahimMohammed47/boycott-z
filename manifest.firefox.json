@@ -11,10 +11,10 @@
     "storage"
   ],
   "icons": {
-      "48": "icons/green-triangle-128.png"
+    "48": "icons/green-triangle-128.png"
   },
   "web_accessible_resources": [
-      "popup/*.*"
+    "popup/*.*"
   ],
   "browser_action": {
     "default_icon": {

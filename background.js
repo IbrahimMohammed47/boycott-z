@@ -26,6 +26,20 @@ const ecommerceTargets = [
   "jumia", "amazon", "ebay", "walmart", "argos", "tesco", "aliexpress", "noon", "bestbuy", "target", "sainsburys"
 ]
 
+const socialTargets = [
+  "twitter",
+  "linkedin"
+]
+
+function shouldByPassPage(domainName, path) {
+  if (['twitter.com', 'x.com'].includes(domainName) && path.length > 1 && path.split("/").length == 2) {
+    return false
+  }
+  if (['linkedin.com'].includes(domainName) && path.length > 1 && path.split("/").length == 4) {
+    return false
+  }
+  return excludedWebsites.indexOf(domainName) >= 0
+}
 export async function handleTabVisit(actions, tabId, tabUrl) {
   browserAPI = actions;
   const urlObject = new URL(tabUrl);
@@ -37,25 +51,45 @@ export async function handleTabVisit(actions, tabId, tabUrl) {
   const domainName = urlObject.hostname.startsWith("www.")
     ? urlObject.hostname.slice(4)
     : urlObject.hostname;
-  if (excludedWebsites.indexOf(domainName) >= 0) {
+  if (shouldByPassPage(domainName, urlObject.pathname)) {
     return showOk(tabId);
   }
-  const eCommerce = getEcommerceTarget(domainName);
-  if (eCommerce.isEcommerce) {
-    const script = `${eCommerce.target}-blocker`;
+  const targetObj = getTarget(domainName)
+  // const eCommerce = getEcommerceTarget(domainName);
+  if (targetObj.type === 'ecommerce') {
+    const script = `${targetObj.target}-blocker`;
     await injectScript(script, tabId);
     const res = await browserAPI.sendMessageToTab(tabId, {});
     if (res && res.brandName) {
       const json = await getBoycottItem("brand", res.brandName);
       if (json) {
-        await showBoycottWarning(tabId, "brand", json);
+        await showBoycottWarning(tabId, json);
         return;
       }
     }
+  }
+  else if (targetObj.type === 'social') {
+    const script = `${targetObj.target}-blocker`;
+    await injectScript(script, tabId);
+    const res = await browserAPI.sendMessageToTab(tabId, {});
+    if (res && res.figureName) {
+      const json = await getBoycottItem("figure", res.figureName);
+      if (json) {
+        await showBoycottWarning(tabId, json);
+        return;
+      }
+    }
+    // if (res && res.brandName) {
+    //   const json = await getBoycottItem("brand", res.brandName);
+    //   if (json) {
+    //     await showBoycottWarning(tabId, "brand", json);
+    //     return;
+    //   }
+    // }
   } else {
     const json = await getBoycottItem("website", domainName);
     if (json) {
-      await showBoycottWarning(tabId, "website", json);
+      await showBoycottWarning(tabId, json);
       return
     }
   }
@@ -73,15 +107,17 @@ async function showOk(tabId) {
   });
 }
 
-async function showBoycottWarning(tabId, boycottType, boycottObject) {
+async function showBoycottWarning(tabId, boycottObject) {
   await browserAPI.cacheSet({ boycottZItem: boycottObject })
   var notification = {
     title: "Boycott Warning",
   };
-  if (boycottType === "brand") {
-    notification.message = `You visited a product from a boycotted brand: ${boycottObject.label}. Click on the boycott-Z icon to learn more.`;
-  } else if (boycottType === "website") {
-    notification.message = `You visited a boycott brand's website: ${boycottObject.name}. Click on the boycott-Z icon to learn more.`;
+  if (boycottObject.type === "brand") {
+    notification.message = `You visited a product from a boycotted brand: ${boycottObject.label}. Click on the boycott-Z extension to learn more.`;
+  } else if (boycottObject.type === "website") {
+    notification.message = `You visited a boycott brand's website: ${boycottObject.name}. Click on the boycott-Z extension to learn more.`;
+  } else if (boycottObject.type === "figure") {
+    notification.message = `You visited an anti-palestinian profile: ${boycottObject.name}. Click on the boycott-Z extension to learn more.`;
   }
   browserAPI.notify(notification);
   await flash(6, 300, tabId);
@@ -123,10 +159,29 @@ async function injectScript(scriptName, tabId) {
 }
 
 async function getBoycottItem(itemType, key) {
-  const url = `https://lwnimzaynwyplgjazboz.supabase.co/rest/v1/blacklist?type=eq.${itemType}&name=like.*${key
-    .trim()
-    .replaceAll(" ", "%20")}*`;
 
+  let matcher = ""
+  if (itemType === 'website') {
+    matcher = `name=like.*${key}`  // to include subdomains
+  } else if (itemType === 'brand') {
+    matcher = `name=like.*${key
+      .trim()
+      .replaceAll(" ", "%20")}*`
+  } else if (itemType === 'figure') {
+    key = key.trim()
+    let nameParts = key.split(" ").filter(x => !!x)
+    let keyX = key
+      .replaceAll(" ", "%20")
+    matcher = `name=like.*${keyX}*`
+
+    if (nameParts.length >= 3) {
+      matcher = `name.like.*${keyX}*`
+      let matcher2 = `name.like.*${nameParts.slice(0, 2).join(" ").replaceAll(" ", "%20")}*`
+      let matcher3 = `name.like.*${nameParts.slice(1, 3).join(" ").replaceAll(" ", "%20")}*`
+      matcher = `or=(${matcher},${matcher2},${matcher3})`
+    }
+  }
+  const url = `https://lwnimzaynwyplgjazboz.supabase.co/rest/v1/blacklist?limit=5&type=eq.${itemType}&${matcher}`;
   const response = await fetch(url, {
     headers: {
       apiKey:
@@ -134,14 +189,16 @@ async function getBoycottItem(itemType, key) {
     },
   });
   if (!response.ok) {
+    let b = await response.json()
+    console.log(b)
     throw new Error("Network response was not ok");
   }
   const jsonData = await response.json();
-
   if (Array.isArray(jsonData) && jsonData.length > 0) {
     return jsonData[0];
   }
   return null;
+
 }
 
 function getEcommerceTarget(url) {
@@ -151,4 +208,14 @@ function getEcommerceTarget(url) {
   } else {
     return { isEcommerce: false, target: null };
   }
+}
+
+function getTarget(url) {
+  let matchingSite = ecommerceTargets.find((site) => url.includes(site));
+  if (matchingSite) return { type: "ecommerce", target: matchingSite }
+
+  matchingSite = socialTargets.find((site) => url.includes(site));
+  if (matchingSite) return { type: "social", target: matchingSite }
+
+  return { type: null, target: null }
 }
